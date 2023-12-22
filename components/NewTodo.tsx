@@ -5,7 +5,7 @@ import { useRouter} from 'next/navigation'
 const newTodo = ()  => {
     const router = useRouter()
     const handleOnClick = async () => {
-        const data = await NewTodo()
+        const {data} = await NewTodo()
         router.push(`/todos/${data.id}`)
     }
     return (
