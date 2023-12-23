@@ -11,6 +11,8 @@ const NewTodoForm = ({ entry }: {entry : any}) => {
     const [endAt, setEndAt] = useState('');
     const [type, setType] = useState('');
     const [muscle, setMuscle] = useState('');
+    const [supportedarms, setSupportedarms] = useState('');
+    const [supportedlegs, setSupportedlegs] = useState('');
 
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
@@ -20,6 +22,8 @@ const NewTodoForm = ({ entry }: {entry : any}) => {
                 endAt: endAt + ':00Z',
                 type: Number(type),
                 muscle: Number(muscle),
+                supportedarms: Boolean(supportedarms),
+                supportedlegs: Boolean(supportedlegs),
             });
     }
     return (
@@ -70,6 +74,30 @@ const NewTodoForm = ({ entry }: {entry : any}) => {
                 </option>
                 <option className="text-tertiary" value="2">
                     Muscle 2
+                </option>
+            </select>
+            <select
+                className="text-tertiary"
+                value={supportedarms}
+                onChange={(e) => setSupportedarms(e.target.value)}
+            >
+                <option className="text-tertiary" value="false">
+                    not supported
+                </option>
+                <option className="text-tertiary" value="true">
+                    supported
+                </option>
+            </select>
+            <select
+                className="text-tertiary"
+                value={supportedlegs}
+                onChange={(e) => setSupportedlegs(e.target.value)}
+            >
+                <option className="text-tertiary" value="false">
+                    not supported
+                </option>
+                <option className="text-tertiary" value="true">
+                    supported
                 </option>
             </select>
             <button type="submit">Submit</button>

@@ -1,29 +1,38 @@
-import NewTodoForm from '@/components/NewTodoForm'
 import { prisma } from '@/util/db'
 import { getUserFromClerkID } from "@/util/auth"
+import WebcamComponent from '@/components/webcam'
 
 
 const getTodos = async (id) => {
+    console.log('getTodos called with id:', id);
+    
     const user = await getUserFromClerkID()
+    console.log('User:', user);
+    
     const entry = await prisma.todo.findUnique({
         where: {
             userId_id: {
                 userId: user.id,
                 id: id,
             }
-        }
-
+        },
+        include: {
+            landmark: true,
+        },
     })
+    
+    console.log('Entry:', entry);
+    
     return entry
 }
 
-const NewTodopage = async ({ params }: { params: any}) => {
+const NewRulapage = async ({ params }: { params: any}) => {
     const entry = await getTodos(params.id)
     return (
         <div>
-            <NewTodoForm entry={entry} />
+            <WebcamComponent entry={entry} />
         </div>
     )
 }
 
-export default NewTodopage
+export default NewRulapage

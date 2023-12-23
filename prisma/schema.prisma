@@ -10,25 +10,91 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String  @id @default(uuid()) @map("_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  clerkId  String @unique
+  name     String?
+  email    String  @unique
+  account  Account?
+  Todos    Todo[]
+  landmarks  Landmarks[]
+  rulas    Rula[]
+}
+
+model Account {
+  id        String  @id @default(uuid()) @map("_id")
+  userId    String 
+  user      User @relation(fields: [userId], references: [id])
+  @@unique([userId])
+}
+
 model Todo {
-  id        String  @id @default(cuid()) @map("_id")
+  id        String  @id @default(uuid()) @map("_id" )
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title     String @db.String
-  completed      Boolean @default(false)
+  completed Boolean @default(false)
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
   startAt   DateTime
   endAt     DateTime
   type      Int
   muscle    Int
+  supportedarms Boolean
+  supportedlegs Boolean
+  landmark   Landmarks?
+  rula     Rula?
+  @@unique([userId, id])
 }
 
-model Worker {
-  id        String  @id @default(cuid()) @map("_id")
+model Landmarks {
+  id        String  @id @default(uuid()) @map("_id")
+  createdAt DateTime @default(now())
+  landmark_shoulder_right Json[]
+  landmark_shoulder_left Json[]
+  landmark_elbow_right Json[]
+  landmark_elbow_left Json[]
+  landmark_wrist_right Json[]
+  landmark_wrist_left Json[]
+  landmark_hip_right Json[]
+  landmark_hip_left Json[]
+  landmark_index_right Json[]
+  landmark_index_left Json[]
+  landmark_neck Json[]
+  landmark_nose Json[]
+  landmark_eye_right Json[]
+  landmark_eye_left Json[]
+  landmark_trunk Json[]
+  landmark_ear_left Json[]
+  landmark_ear_right Json[]
+  score_a Float
+  todoId    String
+  todo      Todo @relation(fields: [todoId], references: [id])
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
+
+  @@unique([todoId])
+  @@index([userId])
+}
+
+
+model Rula {
+  id        String  @id @default(uuid()) @map("_id")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name      String
-  gender    Boolean
-  age       Int
-  code      String
+  score_a Float
+  score_b Float
+  Rula_score_A   Int
+  Rula_score_B   Int
+  Rula_score_C   Int
+  todoId   String
+  todo     Todo @relation(fields: [todoId], references: [id])
+  userId   String
+  user     User @relation(fields: [userId], references: [id])
+  @@unique([todoId])
+  @@index([userId])
 }
+
 

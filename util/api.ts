@@ -36,3 +36,19 @@ export const addTodo = async (id: string, updates: any) => {
     throw new Error(`Something went wrong on API server! Status: ${res.status} ${res.statusText}`);
   }
 };
+
+export const updatescore = async (id: string, updates: any) => {
+  const request = new Request(createURL(`/api/Rula/${id}`), {
+    method: 'PATCH',
+    body: JSON.stringify({ updates }),
+  });
+
+  const res = await fetch(request);
+
+
+  if (res.ok) {
+    return res.json();
+  } else {
+    throw new Error(`Something went wrong on API server! Status: ${res.status} ${res.statusText}`);
+  }
+};

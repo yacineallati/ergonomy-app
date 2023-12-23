@@ -2,16 +2,26 @@ import NewTodo from '@/components/NewTodo'
 import Todo  from '@/components/Todo'
 import { prisma } from '@/util/db'
 import Link from 'next/link'
+import { getUserFromClerkID } from "@/util/auth"
+
 
 
 const getTodos = async () => {
+    const user = await getUserFromClerkID()
     const data = await prisma.todo.findMany({
+        where: {
+            userId: user.id,
+        },
         orderBy: {
-            startAt: 'desc'
-        }
+            startAt: 'desc',
+        },
+        include: {
+          rula: true,
+        },
     })
+
     return data
-    }
+}
 
 
 const todospage = async () => { 
@@ -21,13 +31,11 @@ const todospage = async () => {
             <NewTodo />
             {data.map((entry) => (
               <div key={entry.id}>
-                <Link href={`/todos/${entry.id}`}>
+                <Link href={`/Rula/${entry.id}`}>
                   <Todo entry={entry} />
                 </Link>
               </div>
             ))}
-
-            <h1>todos</h1>
         </div>
     )
 }
