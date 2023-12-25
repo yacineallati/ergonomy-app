@@ -20,5 +20,5 @@ export default async function NewUser() {
       },
     })
   }
-  redirect('/todos');
+  redirect('/home');
 }

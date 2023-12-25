@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default async function Home() {
   const { userId } = await auth()
-  let href = userId ? '/todos' : '/new-user'
+  let href = userId ? '/home' : '/new-user'
   return(
     <div className="w-screen h-screen bg-primary flex justify-center items-center text-Mint">
     <div className="w-full max-w-[600px] mx-auto">

@@ -1,5 +1,5 @@
-import NewTodo from '@/components/NewTodo'
-import Todo  from '@/components/Todo'
+import NewWorker from '@/components/NewWorker'
+import Worker  from '@/components/Worker'
 import { prisma } from '@/util/db'
 import Link from 'next/link'
 import { getUserFromClerkID } from "@/util/auth"
@@ -7,17 +7,14 @@ import { getUserFromClerkID } from "@/util/auth"
 
 
 
-const getTodos = async () => {
+const getWorkers = async () => {
     const user = await getUserFromClerkID()
-    const data = await prisma.todo.findMany({
+    const data = await prisma.worker.findMany({
         where: {
             userId: user.id,
         },
         orderBy: {
-            startAt: 'desc',
-        },
-        include: {
-          worker: true,
+            createdAt: 'desc',
         },
     })
 
@@ -25,22 +22,21 @@ const getTodos = async () => {
 }
 
 
-
-const todospage = async () => { 
-    const data = await getTodos()
+const workerspage = async () => { 
+    const data = await getWorkers()
     return (
         <div className="px-6 py-8 bg-primary h-full">
             <div className='space-y-2'>
-            <NewTodo />
-            
+            <NewWorker />
             {data.map((entry) => (
               <div key={entry.id}>
-                  <Todo entry={entry} />
+                  <Worker entry={entry} />
               </div>
             ))}
-            </div>
+        </div>
+        
         </div>
     )
 }
 
-export default todospage
+export default workerspage

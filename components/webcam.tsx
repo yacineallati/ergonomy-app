@@ -11,6 +11,7 @@ const Webcam: React.FC<WebcamProps> = ({ entry }: { entry: any }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const landmarkKeyMapping = {
+        
         12: 'landmark_shoulder_right',
         11: 'landmark_shoulder_left',
         14: 'landmark_elbow_right',
@@ -21,6 +22,13 @@ const Webcam: React.FC<WebcamProps> = ({ entry }: { entry: any }) => {
         19: 'landmark_index_left',
         24: 'landmark_hip_right',
         23: 'landmark_hip_left',
+        0: 'landmark_nose',
+        2: 'landmark_eye_left',
+        5: 'landmark_eye_right',
+        7: 'landmark_ear_left',
+        8: 'landmark_ear_right',
+        25: 'landmark_knee_left',
+        26: 'landmark_knee_right',
     };
     let poseLandmarker: PoseLandmarker;
     const [frameCount, setFrameCount] = useState(0);
@@ -34,6 +42,13 @@ const Webcam: React.FC<WebcamProps> = ({ entry }: { entry: any }) => {
     const [leftIndexLandmarks, setLeftIndexLandmarks] = useState(['', '', '']);
     const [rightHipLandmarks, setRightHipLandmarks] = useState(['', '', '']);
     const [leftHipLandmarks, setLeftHipLandmarks] = useState(['', '', '']);
+    const [noseLandmarks, setNoseLandmarks] = useState(['', '', '']);
+    const [leftEyeLandmarks, setLeftEyeLandmarks] = useState(['', '', '']);
+    const [rightEyeLandmarks, setRightEyeLandmarks] = useState(['', '', '']);
+    const [leftEarLandmarks, setLeftEarLandmarks] = useState(['', '', '']);
+    const [rightEarLandmarks, setRightEarLandmarks] = useState(['', '', '']);
+    const [leftKneeLandmarks, setLeftKneeLandmarks] = useState(['', '', '']);
+    const [rightKneeLandmarks, setRightKneeLandmarks] = useState(['', '', '']);
 
     useEffect(() => {
         const activateWebcam = async () => {
@@ -73,6 +88,7 @@ const predictWebcam = async () => {
             canvasContext.save();
             canvasContext.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
             const landmarkSetters = {
+                
                 12: setRightShoulderLandmarks,
                 11: setLeftShoulderLandmarks,
                 14: setRightElbowLandmarks,
@@ -83,6 +99,13 @@ const predictWebcam = async () => {
                 19: setLeftIndexLandmarks,
                 24: setRightHipLandmarks,
                 23: setLeftHipLandmarks,
+                0: setNoseLandmarks,
+                2: setLeftEyeLandmarks,
+                5: setRightEyeLandmarks,
+                7: setLeftEarLandmarks,
+                8: setRightEarLandmarks,
+                25: setLeftKneeLandmarks,
+                26: setRightKneeLandmarks,
             };
 
             for (const landmark of result.landmarks) {
@@ -90,7 +113,7 @@ const predictWebcam = async () => {
                     radius: (data) => DrawingUtils.lerp(data.from!.z, -0.15, 0.1, 5, 1),
                 });
                 drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
-                if (Date.now() - lastUpdateTime > 5000) { // 1000ms/10 = 100ms
+                if (Date.now() - lastUpdateTime > 10000) { // 1000ms/10 = 100ms
                     lastUpdateTime = Date.now();
                     console.log('frameCount:', frameCount);  // Add this line
                     let newLandmarks = {
@@ -103,7 +126,14 @@ const predictWebcam = async () => {
                         landmark_hip_right: rightHipLandmarks,
                         landmark_hip_left: leftHipLandmarks,
                         landmark_index_right: rightIndexLandmarks,
-                        landmark_index_left: leftIndexLandmarks
+                        landmark_index_left: leftIndexLandmarks,
+                        landmark_nose: noseLandmarks,
+                        landmark_eye_left: leftEyeLandmarks,
+                        landmark_eye_right: rightEyeLandmarks,
+                        landmark_ear_left: leftEarLandmarks,
+                        landmark_ear_right: rightEarLandmarks,
+                        landmark_knee_left: leftKneeLandmarks,
+                        landmark_knee_right: rightKneeLandmarks,
                     };
                     for (const point of landmark) {
                         const pointArray = [point.x, point.y, point.z];

@@ -17,7 +17,7 @@ const getTodos = async (id) => {
             }
         },
         include: {
-            landmark: true,
+            landmarks: true,
         },
     })
     

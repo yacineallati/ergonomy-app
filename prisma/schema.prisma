@@ -19,6 +19,7 @@ model User {
   email    String  @unique
   account  Account?
   Todos    Todo[]
+  workers  Worker[]
   landmarks  Landmarks[]
   rulas    Rula[]
 }
@@ -44,38 +45,53 @@ model Todo {
   muscle    Int
   supportedarms Boolean
   supportedlegs Boolean
-  landmark   Landmarks?
-  rula     Rula?
+  workerId  String
+  worker    Worker @relation(fields: [workerId], references: [id])
+  landmarks Landmarks[]
   @@unique([userId, id])
 }
-
+model Worker {
+  id        String  @id @default(uuid()) @map("_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  userId    String
+  user      User @relation(fields: [userId], references: [id])
+  todos     Todo[]
+  landmarks  Landmarks[]
+  rulas    Rula[]
+  @@unique([userId, id])
+}
 model Landmarks {
   id        String  @id @default(uuid()) @map("_id")
   createdAt DateTime @default(now())
-  landmark_shoulder_right Json[]
-  landmark_shoulder_left Json[]
-  landmark_elbow_right Json[]
-  landmark_elbow_left Json[]
-  landmark_wrist_right Json[]
-  landmark_wrist_left Json[]
-  landmark_hip_right Json[]
-  landmark_hip_left Json[]
-  landmark_index_right Json[]
-  landmark_index_left Json[]
-  landmark_neck Json[]
-  landmark_nose Json[]
-  landmark_eye_right Json[]
-  landmark_eye_left Json[]
-  landmark_trunk Json[]
-  landmark_ear_left Json[]
-  landmark_ear_right Json[]
+  landmark_shoulder_right Float[]
+  landmark_shoulder_left Float[]
+  landmark_elbow_right Float[]
+  landmark_elbow_left Float[]
+  landmark_wrist_right Float[]
+  landmark_wrist_left Float[]
+  landmark_hip_right Float[]
+  landmark_hip_left Float[]
+  landmark_index_right Float[]
+  landmark_index_left Float[]
+  landmark_nose Float[]
+  landmark_eye_right Float[]
+  landmark_eye_left Float[]
+  landmark_ear_left Float[]
+  landmark_ear_right Float[]
+  landmark_knee_right Float[]
+  landmark_knee_left Float[]
   score_a Float
+  score_b Float
+  score_c Float
   todoId    String
   todo      Todo @relation(fields: [todoId], references: [id])
+  workerId    String
+  worker      Worker @relation(fields: [workerId], references: [id])
   userId    String
   user      User @relation(fields: [userId], references: [id])
 
-  @@unique([todoId])
   @@index([userId])
 }
 
@@ -84,16 +100,13 @@ model Rula {
   id        String  @id @default(uuid()) @map("_id")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  score_a Float
-  score_b Float
   Rula_score_A   Int
   Rula_score_B   Int
   Rula_score_C   Int
-  todoId   String
-  todo     Todo @relation(fields: [todoId], references: [id])
+  workerId   String
+  worker     Worker @relation(fields: [workerId], references: [id])
   userId   String
   user     User @relation(fields: [userId], references: [id])
-  @@unique([todoId])
   @@index([userId])
 }
 
